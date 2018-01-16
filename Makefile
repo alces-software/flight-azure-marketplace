@@ -38,7 +38,7 @@ build:
 					   -p -a $(KS_RENDERED) -c $(OZ_CFG) -t 1800
 
 prepare:
-	@[ -f $(VM_DIR)/$(IMAGE_NAME).qcow2 ] || exit
+	@[ ! -f $(VM_DIR)/$(IMAGE_NAME).qcow2 ] || exit
 	@echo "Preparing image"
 	@virt-sysprep -a $(VM_DIR)/$(IMAGE_NAME).qcow2
 	@echo "Sparsifying image"
@@ -47,7 +47,7 @@ prepare:
 	@echo "Created image $(VM_DIR)/converted/$(IMAGE_NAME).qcow2"
 
 convert:
-	@[ -f $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 ] || exit
+	@[ ! -f $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 ] || exit
 	@echo "Converting $(IMAGE_NAME) to RAW"
 	@$(QEMU_IMG_BIN) convert -f qcow2 -O raw $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 \
 						       $(VM_DIR)/$(IMAGE_NAME).raw
@@ -62,7 +62,7 @@ convert:
 				 $(VM_DIR)/$(IMAGE_NAME).vhd
 
 upload:
-	@[ -f $(IMAGE_NAME).vhd ] || exit
+	@[ ! -f $(IMAGE_NAME).vhd ] || exit
 	@echo "Uploading $(IMAGE_NAME) to blob storage"
 	@az storage blob upload --account-name $(STORAGE_ACCOUNT) \
 												  --container-name $(STORAGE_CONTAINER) \
