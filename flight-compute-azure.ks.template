@@ -13,7 +13,7 @@ repo --name "extras" --baseurl="http://mirror.centos.org/centos/7/extras/x86_64/
 network  --bootproto=dhcp
 network  --hostname=localhost.localdomain
 # Root password
-rootpw A1ce$$0ftware
+rootpw alcesflightonazure
 selinux --enforcing
 services --disabled="kdump" --enabled="network,sshd,rsyslog,chronyd"
 timezone UTC --isUtc
@@ -111,6 +111,80 @@ EOF
 
 systemctl enable cloud-init
 systemctl enable waagent
+
+###################################################################
+# Flight install
+###################################################################
+
+cat << EOF > /etc/systemd/system-preset/00-alces-base.preset
+disable libvirtd.service
+disable NetworkManager.service
+disable firewalld.service
+EOF
+
+# Base ClusterWare install and configuration
+yum -y groupinstall "Development Tools"
+yum -y install nano screen emacs tree vim
+export cw_DIST=el7
+export cw_BUILD_release="%BUILD_RELEASE%"
+curl -sL http://git.io/clusterware-installer | /bin/bash
+sed -e "s,%RELEASE%,$(printf "%40s" "Flight Compute r${cw_BUILD_release}"),g" \
+    -i /opt/clusterware/etc/banner
+cat <<EOF > /opt/clusterware/etc/flight.rc
+################################################################################
+##
+## Alces Clusterware - Shell configuration
+## Copyright (c) 2017 Alces Software Ltd
+##
+################################################################################
+cw_FLIGHT_release="${cw_BUILD_release}"
+EOF
+
+# Add image configuration defaults
+cat <<EOF > /opt/clusterware/etc/defaults.yml
+---
+cluster:
+  scheduler:
+    allocation: autodetect
+EOF
+PATH=/opt/clusterware/bin:$PATH
+
+alces service install gridware
+alces service install clusterware-sessions
+alces service install clusterware-storage
+alces handler enable clusterable
+alces handler enable cluster-nfs
+alces handler enable cluster-gridware
+alces handler enable session-firewall
+alces handler enable cluster-firewall
+alces handler enable taskable
+alces session enable gnome
+
+# Create /opt/apps for user applications
+cat <<EOF >> /opt/clusterware/etc/gridware/global/modulespath
+#=User applications
+/opt/apps/etc/modules
+EOF
+mkdir -p /opt/apps/etc/modules
+cp /opt/clusterware/etc/gridware/depotskel/modules/null /opt/apps/etc/modules
+chgrp -R gridware /opt/apps
+chmod -R g+rw /opt/apps
+find /opt/apps -type d -exec chmod g+s {} \;
+cat <<\EOF > /opt/clusterware/etc/cluster-nfs.d/cluster-apps.rc
+################################################################################
+##
+## Alces Clusterware - Shell configuration
+## Copyright (c) 2016 Alces Software Ltd
+##
+################################################################################
+if [ -d "/opt/apps" ]; then
+  cw_CLUSTER_NFS_exports="${cw_CLUSTER_NFS_exports} /opt/apps"
+fi
+EOF
+
+###################################################################
+# Cleanup
+###################################################################
 
 yum clean all
 
