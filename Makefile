@@ -13,6 +13,7 @@ VM_DIR=/opt/vm
 QEMU_IMG_BIN=$(VM_DIR)/qemu-img
 XML=domain.xml
 XML_RENDERED=$(IMAGE_NAME).xml
+PRV_BRIDGE=prv
 
 # Azure config
 STORAGE_ACCOUNT=alces
@@ -37,6 +38,7 @@ build:
 					   -p -a $(KS_RENDERED) -c $(OZ_CFG) -t 1800
 
 prepare:
+	@[ -f $(VM_DIR)/$(IMAGE_NAME).qcow2 ] || exit
 	@echo "Preparing image"
 	@virt-sysprep -a $(VM_DIR)/$(IMAGE_NAME).qcow2
 	@echo "Sparsifying image"
@@ -45,6 +47,7 @@ prepare:
 	@echo "Created image $(VM_DIR)/converted/$(IMAGE_NAME).qcow2"
 
 convert:
+	@[ -f $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 ] || exit
 	@echo "Converting $(IMAGE_NAME) to RAW"
 	@$(QEMU_IMG_BIN) convert -f qcow2 -O raw $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 \
 						       $(VM_DIR)/$(IMAGE_NAME).raw
@@ -59,6 +62,7 @@ convert:
 				 $(VM_DIR)/$(IMAGE_NAME).vhd
 
 upload:
+	@[ -f $(IMAGE_NAME).vhd ] || exit
 	@echo "Uploading $(IMAGE_NAME) to blob storage"
 	@az storage blob upload --account-name $(STORAGE_ACCOUNT) \
 												  --container-name $(STORAGE_CONTAINER) \
@@ -68,8 +72,8 @@ upload:
 	@echo "Creating new image $(IMAGE_NAME)"
 	@az image create --resource-group $(RESOURCE_GROUP) \
 								   --name $(IMAGE_NAME) \
-									 --location uksouth \
-									 --os-type Linux \
+									 --location 'uksouth' \
+									 --os-type 'Linux' \
 									 --source "https://$(STORAGE_ACCOUNT).blob.core.windows.net/$(STORAGE_CONTAINER)/$(IMAGE_NAME)"
 
 clean:
