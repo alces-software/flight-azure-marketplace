@@ -52,3 +52,7 @@ convert:
 	@$(QEMU_IMG_BIN) convert -f raw -O vpc -o subformat=fixed,force_size \
 				 $(VM_DIR)/$(IMAGE_NAME).raw \
 				 $(VM_DIR)/$(IMAGE_NAME).vhd
+
+clean:
+	@echo "Cleaning all disk images for $(IMAGE_NAME)"
+	@rm -fv $(VM_DIR)/$(IMAGE_NAME)* $(VM_DIR)/converted/$(IMAGE_NAME)*
