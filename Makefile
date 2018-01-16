@@ -80,9 +80,9 @@ boot:
 	@echo "Booting image $(IMAGE_NAME)"
 	@genisoimage -o $(VM_DIR)/$(IMAGE_NAME)-config.iso -V cidata -r -J meta-data user-data
 	@cp $(XML) $(XML_RENDERED)
-	@sed -i -e 's,%IMAGE_NAME%,$(IMAGE_NAME)/g' \
+	@sed -i -e 's,%IMAGE_NAME%,$(IMAGE_NAME),g' \
 					-e 's,%VM_DIR%,$(VM_DIR),g' \
 					-e 's,%SOURCE_BRIDGE_INT%,$(PRV_BRIDGE),g' \
 					$(XML_RENDERED)
 	@virsh define $(XML_RENDERED)
-	@echo "To start: virsh start $(IMAGE_NAME)"
+	@virsh start $(IMAGE_NAME)
