@@ -4,7 +4,8 @@ IMAGE_VERSION=0.0.1-azure
 IMAGE_NAME=$(IMAGE_TYPE)-$(IMAGE_VERSION)
 
 # Libvirt/Oz config
-KICKSTART=flight-compute-azure.ks.template
+KS=flight-compute-azure.ks.template
+KS_RENDERED=/tmp/$(IMAGE_NAME).ks
 TDL=centos7.tdl
 TDL_RENDERED=/tmp/$(IMAGE_NAME).tdl
 OZ_CFG=oz.cfg
@@ -24,12 +25,14 @@ all: setup build prepare convert
 setup:
 	@[ -d $(VM_DIR) ] || mkdir -p $(VM_DIR)/converted
 	@cp $(TDL) $(TDL_RENDERED)
-	@sed -i -e 's/c7/$(IMAGE_NAME)/g' $(TDL_RENDERED)
+	@cp $(KS) $(KS_RENDERED)
+	@sed -i -e 's,c7,$(IMAGE_NAME),g' $(TDL_RENDERED)
+	@sed -i -e 's,%BUILD_RELEASE%,$(IMAGE_VERSION)/g' $(KS_RENDERED)
 
 build:
 	@echo "Building image $(IMAGE_NAME)"
 	oz-install -d3 -u $(TDL_RENDERED) -x /tmp/$(IMAGE_NAME).xml \
-					   -p -a $(KICKSTART) -c $(OZ_CFG) -t 1800
+					   -p -a $(KS_RENDERED) -c $(OZ_CFG) -t 1800
 
 prepare:
 	@echo "Preparing image"
