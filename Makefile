@@ -20,7 +20,7 @@ RESOURCE_GROUP=alces
 # Disk config
 MB=$$((1024 * 1024))
 
-all: setup build prepare convert
+all: setup build prepare convert upload
 
 setup:
 	@[ -d $(VM_DIR) ] || mkdir -p $(VM_DIR)/converted
@@ -55,6 +55,20 @@ convert:
 	@$(QEMU_IMG_BIN) convert -f raw -O vpc -o subformat=fixed,force_size \
 				 $(VM_DIR)/$(IMAGE_NAME).raw \
 				 $(VM_DIR)/$(IMAGE_NAME).vhd
+
+upload:
+	@echo "Uploading $(IMAGE_NAME) to blob storage"
+	@az storage blob upload --account-name $(STORAGE_ACCOUNT) \
+												  --container-name $(STORAGE_CONTAINER) \
+													--type page \
+													--file $(VM_DIR)/$(IMAGE_NAME).vhd \
+													--name $(IMAGE_NAME)
+	@echo "Creating new image $(IMAGE_NAME)"
+	@az image create --resource-group $(RESOURCE_GROUP) \
+								   --name $(IMAGE_NAME) \
+									 --location uksouth \
+									 --os-type Linux \
+									 --source "https://$(STORAGE_ACCOUNT).blob.core.windows.net/$(STORAGE_CONTAINER)/$(IMAGE_NAME)"
 
 clean:
 	@echo "Cleaning all disk images for $(IMAGE_NAME)"
