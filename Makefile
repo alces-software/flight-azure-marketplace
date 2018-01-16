@@ -41,7 +41,7 @@ prepare:
 
 convert:
 	@echo "Converting $(IMAGE_NAME) to RAW"
-	@qemu-img convert -f qcow2 -O raw $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 \
+	@$(QEMU_IMG_BIN) convert -f qcow2 -O raw $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 \
 						       $(VM_DIR)/$(IMAGE_NAME).raw
 	@$(eval DISK_SIZE=$(shell $(QEMU_IMG_BIN) info -f raw --output json $(VM_DIR)/$(IMAGE_NAME).raw | jq '."virtual-size"'))
 	@$(eval DIVIDED_SIZE=$(shell echo $(DISK_SIZE)/$(MB) | bc))
