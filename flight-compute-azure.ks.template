@@ -89,7 +89,7 @@ cat << EOF > /etc/waagent.conf
 #
 Provisioning.Enabled=n
 Provisioning.UseCloudInit=y
-Provisioning.DeleteRootPassword=y
+Provisioning.DeleteRootPassword=n
 Provisioning.RegenerateSshHostKeyPair=y
 Provisioning.SshHostKeyPairType=rsa
 Provisioning.MonitorHostName=y
@@ -102,11 +102,11 @@ ResourceDisk.MountPoint=/mnt/resource
 ResourceDisk.EnableSwap=n
 ResourceDisk.SwapSizeMB=0
 ResourceDisk.MountOptions=None
-Logs.Verbose=y
+Logs.Verbose=n
 OS.RootDeviceScsiTimeout=300
 OS.OpensslPath=None
 OS.SshDir=/etc/ssh
-OS.EnableFirewall=y
+OS.EnableFirewall=n
 EOF
 
 systemctl enable cloud-init
