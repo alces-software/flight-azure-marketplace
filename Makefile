@@ -27,7 +27,7 @@ setup:
 	@cp $(TDL) $(TDL_RENDERED)
 	@cp $(KS) $(KS_RENDERED)
 	@sed -i -e 's,c7,$(IMAGE_NAME),g' $(TDL_RENDERED)
-	@sed -i -e 's,%BUILD_RELEASE%,$(IMAGE_VERSION)/g' $(KS_RENDERED)
+	@sed -i -e 's,%BUILD_RELEASE%,$(IMAGE_VERSION),g' $(KS_RENDERED)
 
 build:
 	@echo "Building image $(IMAGE_NAME)"
