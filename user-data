@@ -1,0 +1,7 @@
+#cloud-config
+write_files:
+- content: |
+    # Hello world
+  path: /etc/alces.txt
+  owner: root:root
+  permissions: '0640'
