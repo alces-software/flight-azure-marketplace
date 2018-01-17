@@ -27,8 +27,6 @@ all: setup build prepare convert upload
 
 setup:
 	@[ -d $(VM_DIR)/converted ] || mkdir -p $(VM_DIR)/converted
-	@sed -i -e 's,c7,$(IMAGE_NAME),g' $(TDL_RENDERED)
-	@sed -i -e 's,%BUILD_RELEASE%,$(IMAGE_VERSION),g' $(KS_RENDERED)
 
 build:
 	@cp $(TDL) $(TDL_RENDERED)
