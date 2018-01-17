@@ -26,13 +26,15 @@ MB=$$((1024 * 1024))
 all: setup build prepare convert upload
 
 setup:
-	@[ -d $(VM_DIR) ] || mkdir -p $(VM_DIR)/converted
-	@cp $(TDL) $(TDL_RENDERED)
-	@cp $(KS) $(KS_RENDERED)
+	@[ -d $(VM_DIR)/converted ] || mkdir -p $(VM_DIR)/converted
 	@sed -i -e 's,c7,$(IMAGE_NAME),g' $(TDL_RENDERED)
 	@sed -i -e 's,%BUILD_RELEASE%,$(IMAGE_VERSION),g' $(KS_RENDERED)
 
 build:
+	@cp $(TDL) $(TDL_RENDERED)
+	@cp $(KS) $(KS_RENDERED)
+	@sed -i -e 's,c7,$(IMAGE_NAME),g' $(TDL_RENDERED)
+	@sed -i -e 's,%BUILD_RELEASE%,$(IMAGE_VERSION),g' $(KS_RENDERED)
 	@echo "Building image $(IMAGE_NAME)"
 	oz-install -d3 -u $(TDL_RENDERED) -x /tmp/$(IMAGE_NAME).xml \
 					   -p -a $(KS_RENDERED) -c $(OZ_CFG) -t 1800
