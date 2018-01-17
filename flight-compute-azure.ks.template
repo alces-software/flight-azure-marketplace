@@ -79,6 +79,16 @@ UPDATEDEFAULT=yes
 DEFAULTKERNEL=kernel
 EOL
 
+# Disable selinux
+sed -e 's/^SELINUX=.*/SELINUX=disabled/g' -i /etc/selinux/config
+
+# Prep sudo
+sed -e "s/Defaults    requiretty/#Defaults    requiretty/g" -i /etc/sudoers
+
+# Lock/scramble root password
+dd if=/dev/urandom count=50|md5sum|passwd --stdin root
+passwd -l root
+
 # make sure firstboot doesn't start
 echo "RUN_FIRSTBOOT=NO" > /etc/sysconfig/firstboot
 
