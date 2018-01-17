@@ -16,9 +16,9 @@ XML_RENDERED=$(IMAGE_NAME).xml
 PRV_BRIDGE=prv
 
 # Azure config
-STORAGE_ACCOUNT=alces
+STORAGE_ACCOUNT=alcesflight
 STORAGE_CONTAINER=images
-RESOURCE_GROUP=alces
+RESOURCE_GROUP=alcesflight
 
 # Disk config
 MB=$$((1024 * 1024))
