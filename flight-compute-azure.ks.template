@@ -162,8 +162,10 @@ PATH=/opt/clusterware/bin:$PATH
 alces service install gridware
 alces service install clusterware-sessions
 alces service install clusterware-storage
+alces service install gridscheduler
 alces handler enable clusterable
 alces handler enable cluster-nfs
+alces handler enable cluster-sge
 alces handler enable cluster-gridware
 alces handler enable session-firewall
 alces handler enable cluster-firewall
