@@ -195,6 +195,10 @@ if [ -d "/opt/apps" ]; then
 fi
 EOF
 
+# Configure firewall
+yum install -y iptables-services iptables-utils
+systemctl enable iptables
+
 ###################################################################
 # Cleanup
 ###################################################################
