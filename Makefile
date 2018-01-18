@@ -1,6 +1,6 @@
 # Image config
 IMAGE_TYPE=alces-flight-compute
-IMAGE_VERSION=0.0.1-azure
+IMAGE_VERSION=2017.2
 IMAGE_NAME=$(IMAGE_TYPE)-$(IMAGE_VERSION)
 
 # Libvirt/Oz config
