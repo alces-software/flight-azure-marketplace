@@ -173,6 +173,26 @@ alces handler enable cluster-firewall
 alces handler enable taskable
 alces session enable gnome
 
+# Patch network functions to enable Azure support
+pushd /opt/clusterware/lib/functions
+patch -p0 <<'PATCH'
+--- network.functions.sh.orig    2018-01-18 16:59:39.967277826 +0000
++++ network.functions.sh    2018-01-18 17:06:02.482203743 +0000
+@@ -39,6 +39,11 @@
+     fi
+
+     if [ -z "$public_ipv4" ]; then
++        public_ipv4="$(curl -s -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=2017-04-02" | \
++          "${cw_ROOT}"/opt/jq/bin/jq -r '.network.interface[0].ipv4.ipAddress[0].publicIpAddress')"
++    fi
++
++    if [ -z "$public_ipv4" ]; then
+         # Couldn't find it via EC2 API, use apparent public interface address.
+         ip -o route get 8.8.8.8 \
+             | head -n 1 \
+PATCH
+popd
+
 # Create /opt/apps for user applications
 cat <<EOF >> /opt/clusterware/etc/gridware/global/modulespath
 #=User applications
@@ -194,6 +214,10 @@ if [ -d "/opt/apps" ]; then
   cw_CLUSTER_NFS_exports="${cw_CLUSTER_NFS_exports} /opt/apps"
 fi
 EOF
+
+# Prefer binary installation over compiling from source
+sed -i -e 's/cw_GRIDWARE_prefer_binary=false/cw_GRIDWARE_prefer_binary=true/g' \
+  /opt/clusterware/etc/gridware.rc
 
 # Configure firewall
 yum install -y iptables-services iptables-utils
