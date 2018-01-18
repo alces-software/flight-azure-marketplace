@@ -139,7 +139,20 @@
 							"priority": 1000,
 							"direction": "Inbound"
 						}
-					}
+					},
+                    {
+                        "name": "inbound-vnc",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "5900-5920",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 1001,
+                            "direction": "Inbound"
+                        }
+                    }
 				]
 			}
 		},
