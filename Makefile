@@ -83,6 +83,10 @@ clean:
 	@echo "Cleaning all disk images for $(IMAGE_NAME)"
 	rm -fv $(VM_DIR)/$(IMAGE_NAME)* $(VM_DIR)/converted/$(IMAGE_NAME)*
 
+clean-all:
+	@echo "Cleaning all disk images for image type $(IMAGE_TYPE)"
+	rm -fv $(VM_DIR)/$(IMAGE_TYPE)* $(VM_DIR)/converted/$(IMAGE_TYPE)*
+
 boot:
 	@echo "Booting image $(IMAGE_NAME)"
 	genisoimage -o $(VM_DIR)/$(IMAGE_NAME)-config.iso -V cidata -r -J meta-data user-data
