@@ -19,9 +19,7 @@ PRV_BRIDGE=prv
 STORAGE_ACCOUNT=alcesflight
 STORAGE_CONTAINER=images
 RESOURCE_GROUP=alcesflight
-
-# Disk config
-MB=$$((1024 * 1024))
+IMAGE_URL="https://$(STORAGE_ACCOUNT).blob.core.windows.net/$(STORAGE_CONTAINER)/$(IMAGE_NAME).vhd"
 
 all: setup build prepare convert upload
 
@@ -54,11 +52,6 @@ prepare:
 
 convert:
 	[ -f $(VM_DIR)/$(IMAGE_NAME).raw ] || exit
-	$(eval DISK_SIZE=$(shell $(QEMU_IMG_BIN) info -f raw --output json $(VM_DIR)/$(IMAGE_NAME).raw | jq '."virtual-size"'))
-	$(eval DIVIDED_SIZE=$(shell echo $(DISK_SIZE)/$(MB) | bc))
-	$(eval ROUNDED_SIZE=$(shell echo $(DIVIDED_SIZE)*$(MB) | bc))
-	@echo "Resizing RAW image to rounded size $(ROUNDED_SIZE)"
-	$(QEMU_IMG_BIN) resize -f raw $(VM_DIR)/$(IMAGE_NAME).raw $(ROUNDED_SIZE)
 	@echo "Converting RAW image to VHD format"
 	$(QEMU_IMG_BIN) convert -f raw -O vpc -o subformat=fixed,force_size \
 		$(VM_DIR)/$(IMAGE_NAME).raw \
@@ -71,13 +64,13 @@ upload:
 		--container-name $(STORAGE_CONTAINER) \
 		--type page \
 		--file $(VM_DIR)/$(IMAGE_NAME).vhd \
-		--name $(IMAGE_NAME)
+		--name "$(IMAGE_NAME).vhd"
 	@echo "Creating new image $(IMAGE_NAME)"
 	az image create --resource-group $(RESOURCE_GROUP) \
 		--name $(IMAGE_NAME) \
 		--location 'uksouth' \
 		--os-type 'Linux' \
-		--source "https://$(STORAGE_ACCOUNT).blob.core.windows.net/$(STORAGE_CONTAINER)/$(IMAGE_NAME)"
+		--source "$(IMAGE_URL)"
 
 clean:
 	@echo "Cleaning all disk images for $(IMAGE_NAME)"
