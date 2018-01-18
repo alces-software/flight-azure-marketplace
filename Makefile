@@ -1,3 +1,10 @@
+#==============================================================================
+# Copyright (C) 2018 Stephen F Norledge & Alces Software Ltd.
+#
+# This file is part of Alces Clusterware.
+#
+# Some rights reserved, see LICENSE.
+#==============================================================================
 # Image config
 IMAGE_TYPE=alces-flight-compute
 IMAGE_VERSION=2017.2-alpha
