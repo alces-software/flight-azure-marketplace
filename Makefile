@@ -9,7 +9,7 @@ KS_RENDERED=/tmp/$(IMAGE_NAME).ks
 TDL=centos7.tdl
 TDL_RENDERED=/tmp/$(IMAGE_NAME).tdl
 OZ_CFG=oz.cfg
-VM_DIR=/opt/vm
+VM_DIR=/mnt/resource
 QEMU_IMG_BIN=$(VM_DIR)/qemu-img
 XML=domain.xml
 XML_RENDERED=$(IMAGE_NAME).xml
@@ -47,13 +47,13 @@ prepare:
 		$(VM_DIR)/$(IMAGE_NAME).qcow2 \
 		$(VM_DIR)/converted/$(IMAGE_NAME).qcow2
 	@echo "Created image $(VM_DIR)/converted/$(IMAGE_NAME).qcow2"
-
-convert:
-	[ -f $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 ] || exit
 	@echo "Converting $(IMAGE_NAME) to RAW"
 	$(QEMU_IMG_BIN) convert -f qcow2 -O raw \
-		$(VM_DIR)/converted/$(IMAGE_NAME).qcow2 \
-		$(VM_DIR)/$(IMAGE_NAME).raw
+                $(VM_DIR)/converted/$(IMAGE_NAME).qcow2 \
+                $(VM_DIR)/$(IMAGE_NAME).raw
+
+convert:
+	[ -f $(VM_DIR)/$(IMAGE_NAME).raw ] || exit
 	$(eval DISK_SIZE=$(shell $(QEMU_IMG_BIN) info -f raw --output json $(VM_DIR)/$(IMAGE_NAME).raw | jq '."virtual-size"'))
 	$(eval DIVIDED_SIZE=$(shell echo $(DISK_SIZE)/$(MB) | bc))
 	$(eval ROUNDED_SIZE=$(shell echo $(DIVIDED_SIZE)*$(MB) | bc))
@@ -88,8 +88,8 @@ boot:
 	genisoimage -o $(VM_DIR)/$(IMAGE_NAME)-config.iso -V cidata -r -J meta-data user-data
 	cp $(XML) $(XML_RENDERED)
 	sed -i -e 's,%IMAGE_NAME%,$(IMAGE_NAME),g' \
-					-e 's,%VM_DIR%,$(VM_DIR),g' \
-					-e 's,%SOURCE_BRIDGE_INT%,$(PRV_BRIDGE),g' \
-					$(XML_RENDERED)
+		-e 's,%VM_DIR%,$(VM_DIR),g' \
+		-e 's,%SOURCE_BRIDGE_INT%,$(PRV_BRIDGE),g' \
+		$(XML_RENDERED)
 	virsh define $(XML_RENDERED)
 	virsh start $(IMAGE_NAME)
