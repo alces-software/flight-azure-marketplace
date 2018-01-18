@@ -63,6 +63,7 @@
 		"alcesFlightAppliance": "compute",
 		"alcesFlightResourceGroup": "alcesflight",
 		"alcesFlightStorageContainer": "images",
+        "alcesFlightProviderGuid": "686076D1-D0B7-4B15-82F7-CA2B19A4F60B",
 		"clusterUuid": "[guid(resourceGroup().id, deployment().name)]",
 		"clusterToken": "[uniqueString(resourceGroup().id, deployment().name)]",
 		"imageSubscription": "[concat('/subscriptions/', variables('subscriptionId'), '/resourceGroups/', variables('alcesFlightResourceGroup'), '/providers/Microsoft.Compute/', variables('alcesFlightStorageContainer') ,'/alces-flight-',variables('alcesFlightAppliance'), '-', variables('alcesFlightVersion'))]",
@@ -81,7 +82,8 @@
 			"location": "[resourceGroup().location]",
 			"apiVersion": "2016-01-01",
 			"tags": {
-				"displayName": "Alces Flight Storage Account"
+				"displayName": "Alces Flight Storage Account",
+                "provider": "[variables('alcesFlightProviderGuid')]"
 			},
 			"sku": {
 				"name": "Standard_LRS",
@@ -94,7 +96,8 @@
 			"name": "flight-network",
 			"apiVersion": "2017-03-01",
 			"tags": {
-				"displayName": "Alces Flight Cluster Network"
+				"displayName": "Alces Flight Cluster Network",
+                "provider": "[variables('alcesFlightProviderGuid')]"
 			},
 			"location": "[resourceGroup().location]",
 			"properties": {
@@ -118,7 +121,8 @@
 			"name": "inbound-ssh",
 			"apiVersion": "2017-03-01",
 			"tags": {
-				"displayName": "Alces Flight inbound SSH firewall rule"
+				"displayName": "Alces Flight inbound SSH firewall rule",
+                "provider": "[variables('alcesFlightProviderGuid')]"
 			},
 			"location": "[resourceGroup().location]",
 			"properties": {
@@ -144,7 +148,8 @@
 			"name": "login1",
 			"apiVersion": "2017-03-01",
 			"tags": {
-				"displayName": "Alces Flight login node network interface"
+				"displayName": "Alces Flight login node network interface",
+                "provider": "[variables('alcesFlightProviderGuid')]"
 			},
 			"location": "[resourceGroup().location]",
 			"properties": {
@@ -176,7 +181,8 @@
 			"name": "login1",
 			"apiVersion": "2017-03-01",
 			"tags": {
-				"displayName": "Alces Flight login node public IP address"
+				"displayName": "Alces Flight login node public IP address",
+                "provider": "[variables('alcesFlightProviderGuid')]"
 			},
 			"location": "[resourceGroup().location]",
 			"properties": {
@@ -192,7 +198,8 @@
 			"name": "login1",
 			"apiVersion": "2016-04-30-preview",
 			"tags": {
-				"displayName": "Alces Flight login node"
+				"displayName": "Alces Flight login node",
+                "provider": "[variables('alcesFlightProviderGuid')]"
 			},
 			"location": "[resourceGroup().location]",
 			"properties": {
@@ -249,7 +256,8 @@
 			"name": "compute-scaleset",
 			"apiVersion": "2017-03-30",
 			"tags": {
-				"displayName": "Alces Flight autoscaling compute group"
+				"displayName": "Alces Flight autoscaling compute group",
+                "provider": "[variables('alcesFlightProviderGuid')]"
 			},
 			"location": "[resourceGroup().location]",
 			"sku": {
