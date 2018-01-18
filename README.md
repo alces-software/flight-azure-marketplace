@@ -5,15 +5,15 @@
     </p>
 </div>
 
-# Prerequisites
+# Prerequisites ✅
 
 * Standard Alces Libvirt host setup
 * A clone of this repository
 * Azure command-line interface configured
 
-# Building an image
+# Building an image 🛠
 
-## Image builder config
+## Image builder config 📝
 
 Configuration can be found in both `Makefile` and `oz.cfg`. If using a non-standard setup, ensure that the interface name is correct in `oz.cfg`. Optionally, more CPU cores and memory can be provided to the build machine if they are available on the host - speeding up the process.
 
@@ -22,7 +22,7 @@ In addition to the Oz configuration - the `Makefile` contains some settings that
 * `IMAGE_VERSION` - adjust the image version or tag
 * `VM_DIR` - the directory used to store virtual machine images. This directory must have enough space available to store several image files
 
-# Building an image
+## Create, and upload an image 🚀
 
 TL;DR:
 
