@@ -59,7 +59,7 @@
 		}
 	},
 	"variables": {
-		"alcesFlightVersion": "1.0.0-alpha",
+		"alcesFlightVersion": "2017.2-alpha",
 		"alcesFlightAppliance": "compute",
 		"alcesFlightResourceGroup": "alcesflight",
 		"alcesFlightStorageContainer": "images",
