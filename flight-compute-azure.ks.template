@@ -126,6 +126,7 @@ systemctl enable waagent
 # Flight install
 ###################################################################
 
+mkdir -p /etc/systemd/system-preset
 cat << EOF > /etc/systemd/system-preset/00-alces-base.preset
 disable libvirtd.service
 disable NetworkManager.service
