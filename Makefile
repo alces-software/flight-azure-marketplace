@@ -32,6 +32,7 @@ all: setup build prepare convert upload
 
 setup:
 	[ -d $(VM_DIR)/converted ] || mkdir -p $(VM_DIR)/converted
+	[ -d $(VM_DIR)/tmp ] || mkdir -p $(VM_DIR)/tmp
 	[ -f $(QEMU_IMG_BIN) ] || echo "$(QEMU_IMG_BIN) not present" && exit
 
 build:
@@ -48,7 +49,8 @@ prepare:
 	@echo "Preparing image"
 	virt-sysprep -a $(VM_DIR)/$(IMAGE_NAME).qcow2
 	@echo "Sparsifying image"
-	virt-sparsify --compress --format qcow2 \
+	virt-sparsify --tmp $(VM_DIR)/tmp \
+		--compress --format qcow2 \
 		$(VM_DIR)/$(IMAGE_NAME).qcow2 \
 		$(VM_DIR)/converted/$(IMAGE_NAME).qcow2
 	@echo "Created image $(VM_DIR)/converted/$(IMAGE_NAME).qcow2"
