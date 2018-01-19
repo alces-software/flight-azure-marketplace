@@ -110,7 +110,7 @@ ResourceDisk.Format=y
 ResourceDisk.Filesystem=ext4
 ResourceDisk.MountPoint=/mnt/resource
 ResourceDisk.EnableSwap=y
-ResourceDisk.SwapSizeMB=512
+ResourceDisk.SwapSizeMB=16384
 ResourceDisk.MountOptions=None
 Logs.Verbose=n
 OS.RootDeviceScsiTimeout=300
@@ -125,6 +125,11 @@ systemctl enable waagent
 ###################################################################
 # Flight install
 ###################################################################
+
+# Configure SSHD
+sed -i -e 's/#ClientAliveInterval 0/ClientAliveInterval 300/g' \
+       -e 's/#ClientAliveCountMax 3/ClientAliveCountMax 4/g' \
+    /etc/ssh/sshd_config
 
 mkdir -p /etc/systemd/system-preset
 cat << EOF > /etc/systemd/system-preset/00-alces-base.preset
