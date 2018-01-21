@@ -224,7 +224,10 @@
 				},
 				"storageProfile": {
 					"imageReference": {
-						"id": "[variables('imageSubscription')]"
+                        "publisher": "alces-flight-limited",
+                        "offer": "alces-flight-compute-solo",
+                        "sku": "oss-edition",
+                        "version": "latest"
 					},
 					"osDisk": {
 						"createOption": "fromImage",
@@ -306,9 +309,12 @@
 						}
 					},
 					"storageProfile": {
-						"imageReference": {
-							"id": "[variables('imageSubscription')]"
-						},
+					    "imageReference": {
+                            "publisher": "alces-flight-limited",
+                            "offer": "alces-flight-compute-solo",
+                            "sku": "oss-edition",
+                            "version": "latest"
+					    },
 						"osDisk": {
 							"createOption": "FromImage",
 							"managedDisk": {
