@@ -1,4 +1,7 @@
 language: node_js
+node_js:
+    - "8.9.4"
+
 script:
     - git clone https://github.com/Azure/azure-quickstart-templates ~/azure-quickstart-templates
     - cd ~/azure-quickstart-templates/test/solution-template-validation-tests
