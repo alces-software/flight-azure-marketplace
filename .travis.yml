@@ -1,9 +1,10 @@
 language: node_js
 node_js:
     - "8.9.4"
-
-script:
+install:
     - git clone https://github.com/Azure/azure-quickstart-templates ~/azure-quickstart-templates
     - cd ~/azure-quickstart-templates/test/solution-template-validation-tests
     - npm install
+script:
+    - cd ~/azure-quickstart-templates/test/solution-template-validation-tests
     - npm --folder=$TRAVIS_BUILD_DIR run all
