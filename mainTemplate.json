@@ -59,7 +59,7 @@
 		}
 	},
 	"variables": {
-		"alcesFlightVersion": "2017.2-alpha",
+		"alcesFlightVersion": "2017.2-alpha.1",
 		"alcesFlightAppliance": "compute",
 		"alcesFlightResourceGroup": "alcesflight",
 		"alcesFlightStorageContainer": "images",
@@ -68,9 +68,9 @@
 		"clusterToken": "[uniqueString(resourceGroup().id, deployment().name)]",
 		"imageSubscription": "[concat('/subscriptions/', variables('subscriptionId'), '/resourceGroups/', variables('alcesFlightResourceGroup'), '/providers/Microsoft.Compute/', variables('alcesFlightStorageContainer') ,'/alces-flight-',variables('alcesFlightAppliance'), '-', variables('alcesFlightVersion'))]",
 		"subscriptionId": "d1e964ef-15c7-4b27-8113-e725167cee83",
-		"loginNodeUserData": "[concat('bash /opt/alces/helper --cluster-name ', parameters('clusterName'), ' --type master --uuid ', variables('clusterUuid'), ' --token ', variables('clusterToken'))]",
+        "loginNodeUserData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', '      hostname: ''login1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
 		"loginNodePrvIp": "10.0.0.4",
-		"computeNodeUserData": "[concat('bash /opt/alces/helper --master-ip ', variables('loginNodePrvIp'), ' --cluster-name ', parameters('clusterName'), ' --type slave --uuid ', variables('clusterUuid'), ' --token ', variables('clusterToken'))]",
+        "computeNodeUserData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('loginNodePrvIp'), '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':slave:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
 		"storageAccountName": "[concat(uniqueString(parameters('clusterName'), 'storage'))]",
     "computeNodeMinCount": 1,
     "computeNodeMaxCount": 32
