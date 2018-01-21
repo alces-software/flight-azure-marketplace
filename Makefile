@@ -99,3 +99,9 @@ boot:
 		$(XML_RENDERED)
 	virsh define $(XML_RENDERED)
 	virsh start $(IMAGE_NAME)
+
+test:
+	[ -d ./logs ] || mkdir -p ./logs
+	$(eval DATE := $(shell date +"%Y%m%d-%H%M"))
+	mkdir ./logs/$(DATE)
+
