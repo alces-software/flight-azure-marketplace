@@ -1,7 +1,10 @@
 {
-	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json",
 	"contentVersion": "1.0.0.0",
 	"parameters": {
+        "location": {
+            "type": "string"
+        },
 		"clusterName": {
 			"type": "string",
 			"defaultValue": "flight",
@@ -79,7 +82,7 @@
 		{
 			"type": "Microsoft.Storage/storageAccounts",
 			"name": "[variables('storageAccountName')]",
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"apiVersion": "2016-01-01",
 			"tags": {
 				"displayName": "Alces Flight Storage Account",
@@ -99,7 +102,7 @@
 				"displayName": "Alces Flight Cluster Network",
                 "provider": "[variables('alcesFlightProviderGuid')]"
 			},
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"properties": {
 				"addressSpace": {
 					"addressPrefixes": [
@@ -124,7 +127,7 @@
 				"displayName": "Alces Flight inbound SSH firewall rule",
                 "provider": "[variables('alcesFlightProviderGuid')]"
 			},
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"properties": {
 				"securityRules": [
 					{
@@ -164,7 +167,7 @@
 				"displayName": "Alces Flight login node network interface",
                 "provider": "[variables('alcesFlightProviderGuid')]"
 			},
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"properties": {
 				"ipConfigurations": [
 					{
@@ -197,7 +200,7 @@
 				"displayName": "Alces Flight login node public IP address",
                 "provider": "[variables('alcesFlightProviderGuid')]"
 			},
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"properties": {
 				"publicIPAllocationMethod": "Static",
 				"idleTimeoutInMinutes": 30,
@@ -214,7 +217,7 @@
 				"displayName": "Alces Flight login node",
                 "provider": "[variables('alcesFlightProviderGuid')]"
 			},
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"properties": {
 				"hardwareProfile": {
 					"vmSize": "[parameters('loginNodeType')]"
@@ -272,7 +275,7 @@
 				"displayName": "Alces Flight autoscaling compute group",
                 "provider": "[variables('alcesFlightProviderGuid')]"
 			},
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"sku": {
 				"name": "[parameters('computeNodeType')]",
 				"tier": "Standard",
@@ -340,7 +343,7 @@
 			"type": "Microsoft.Insights/autoscaleSettings",
 			"apiVersion": "2015-04-01",
 			"name": "autoscaling-compute",
-			"location": "[resourceGroup().location]",
+			"location": "[parameters('location')]",
 			"dependsOn": [
 				"[concat('Microsoft.Compute/virtualMachineScaleSets/', 'compute-scaleset')]"
 			],
