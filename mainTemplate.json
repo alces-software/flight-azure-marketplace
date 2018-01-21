@@ -63,20 +63,15 @@
 	},
 	"variables": {
 		"alcesFlightVersion": "2017.2-alpha.1",
-		"alcesFlightAppliance": "compute",
-		"alcesFlightResourceGroup": "alcesflight",
-		"alcesFlightStorageContainer": "images",
         "alcesFlightProviderGuid": "686076D1-D0B7-4B15-82F7-CA2B19A4F60B",
 		"clusterUuid": "[guid(resourceGroup().id, deployment().name)]",
 		"clusterToken": "[uniqueString(resourceGroup().id, deployment().name)]",
-		"imageSubscription": "[concat('/subscriptions/', variables('subscriptionId'), '/resourceGroups/', variables('alcesFlightResourceGroup'), '/providers/Microsoft.Compute/', variables('alcesFlightStorageContainer') ,'/alces-flight-',variables('alcesFlightAppliance'), '-', variables('alcesFlightVersion'))]",
-		"subscriptionId": "d1e964ef-15c7-4b27-8113-e725167cee83",
         "loginNodeUserData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', '      hostname: ''login1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
 		"loginNodePrvIp": "10.0.0.4",
         "computeNodeUserData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('loginNodePrvIp'), '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
 		"storageAccountName": "[concat(uniqueString(parameters('clusterName'), 'storage'))]",
-    "computeNodeMinCount": 1,
-    "computeNodeMaxCount": 32
+        "computeNodeMinCount": 1,
+        "computeNodeMaxCount": 32
 	},
 	"resources": [
 		{
