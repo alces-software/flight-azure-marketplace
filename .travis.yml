@@ -1,0 +1,6 @@
+language: node_js
+script:
+    - git clone https://github.com/Azure/azure-quickstart-templates ~/azure-quickstart-templates
+    - cd ~/azure-quickstart-templates/test/solution-template-validation-tests
+    - npm install
+    - npm --folder=$TRAVIS_BUILD_DIR run all
