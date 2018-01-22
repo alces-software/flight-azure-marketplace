@@ -52,7 +52,7 @@
                 "elements": [
                     {
                         "name": "clusterName",
-                        "type": "Microsoft.Compute.UserNameTextBox",
+                        "type": "Microsoft.Common.TextBox",
                         "label": "Cluster name",
                         "defaultValue": "flight",
                         "constraints": {
