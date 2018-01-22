@@ -1,6 +1,6 @@
 {
-	"$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json",
-	"contentVersion": "1.0.0.0",
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "2017.2.1",
 	"parameters": {
         "location": {
             "type": "string"
