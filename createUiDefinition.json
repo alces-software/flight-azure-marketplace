@@ -33,7 +33,9 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Cluster administrator public key",
                         "constraints": {
-                            "required": true
+                            "required": true,
+                            "regex": "ssh-rsa AAAA[0-9A-Za-z+/]+[=]{0,3}( [^@]+@[^@]+)?",
+                            "validation": "Please enter a valid SSH public keypair"
                         }
                     }
                 ]
