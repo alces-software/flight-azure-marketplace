@@ -18,10 +18,9 @@
                 "elements": [
                     {
                         "name": "adminUsername",
-                        "type": "Microsoft.Compute.UserNameTextBox",
+                        "type": "Microsoft.Common.TextBox",
                         "label": "Administrator username",
                         "defaultValue": "alces",
-                        "osPlatform": "Linux",
                         "constraints": {
                             "required": true,
                             "regex": "[a-z][a-z0-9-]{2,12}[a-z0-9]$",
