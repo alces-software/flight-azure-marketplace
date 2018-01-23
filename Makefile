@@ -104,4 +104,10 @@ test:
 	[ -d ./logs ] || mkdir -p ./logs
 	$(eval DATE := $(shell date +"%Y%m%d-%H%M"))
 	mkdir ./logs/$(DATE)
-
+	$(eval CLUSTER_NAME := $(shell cat /dev/random | LC_CTYPE=C tr -dc "[:alpha:]" | head -c 14))
+	$(eval ADMIN_NAME := $(shell cat /dev/random | LC_CTYPE=C tr -dc "[:alpha:]" | head -c 8))
+	$(eval COMPUTE_INSTANCE_TYPE := $(shell))
+	$(eval LOGIN_INSTANCE_TYPE := $(shell))
+	$(eval COMPUTE_NODE_COUNT := $(shell))
+	ssh-keygen -b 2048 -t rsa -f ./logs/$(DATE)/id_rsa -q -N ""
+	jo $$\schema="http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json\#" contentVersion="1.0.0.0" parameters=$$(jo clusterName=$(CLUSTER_NAME) adminUsername=$(ADMIN_NAME) adminPublicKey=$$(cat ./logs/$(DATE)/id_rsa.pub) computeNodeType=$(COMPUTE_INSTANCE_TYPE) loginNodeType=$(LOGIN_INSTANCE_TYPE) computeNodeInitialCount=$(COMPUTE_NODE_COUNT))
