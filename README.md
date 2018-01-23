@@ -7,10 +7,10 @@
 
 # Prerequisites ✅
 
-* Standard Alces Libvirt host setup
-* A clone of this repository
-* Azure command-line interface configured
-* `qemu-img` version `2.9.0` or later installed to `$VM_DIR/qemu-img`
+- Standard Alces Libvirt host setup
+- A clone of this repository
+- Azure command-line interface configured
+- `qemu-img` version `2.9.0` or later installed to `$VM_DIR/qemu-img`
 
 # Building an image 🛠
 
@@ -73,6 +73,10 @@ make prepare
 make convert
 make upload
 ```
+
+# CI 🚨
+
+Travis CI runs automated tests against this repository, the tests check the validity of the Azure marketplace templates using the open-source Azure validation tests. It is important that these tests are passing before submitting templates to the Azure Marketplace, as the same tests will be run by the certification team.
 
 # Extras
 
