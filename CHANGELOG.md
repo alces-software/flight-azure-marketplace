@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2017.2-alpha.1] - 22-01-2018
+## [2017.2-alpha.2] - 23-01-2018
+
+### Changed
+- Lowered `ClientAliveInterval` from `300` to `180`
+- Increased swap size to 16384MB
+
+## [2017.2-alpha.1] - 19-01-2018
 
 ### Added
 - Initial Alces Flight project setup

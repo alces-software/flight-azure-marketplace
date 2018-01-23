@@ -62,7 +62,7 @@
 		}
 	},
 	"variables": {
-		"alcesFlightVersion": "2017.2-alpha.1",
+		"alcesFlightVersion": "2017.2-alpha.2",
         "alcesFlightProviderGuid": "686076D1-D0B7-4B15-82F7-CA2B19A4F60B",
 		"clusterUuid": "[guid(resourceGroup().id, deployment().name)]",
 		"clusterToken": "[uniqueString(resourceGroup().id, deployment().name)]",
