@@ -86,3 +86,19 @@ The `Makefile` contains two clean targets:
 
 - `clean` - Remove all images relating to the current `IMAGE_VERSION` set in the `Makefile`
 - `clean-all` Remove all images relating to the current `IMAGE_TYPE` set in the `Makefile`
+
+# Testing
+
+## Single VM testing
+
+The Alces Flight Compute image can be tested in stand-alone mode. To test this, at least two virtual machines need to be created using the new image. One of the virtual machines will be the cluster master node, and one (or more) cluster slave(s).
+
+The virtual machines should be deployed into a fresh resource group with new networks each time.
+
+### Deploying a virtual machine through Azure portal
+
+- Navigate to the Images page
+- Click on the image you have just created
+- Select **Create VM**
+- For each required virtual machine, follow the creation wizard
+- Grab the public IP for each deployed instance from the Virtual Machines page
