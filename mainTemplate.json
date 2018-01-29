@@ -107,7 +107,8 @@
       "apiVersion":"2016-01-01",
       "tags":{
         "displayName":"Alces Flight Storage Account",
-        "alcesFlightCluster":"[parameters('clusterName')]",
+        "alcesFlightClusterName":"[parameters('clusterName')]",
+        "alcesFlightClusterUuid":"[variables('cluster').uuid]",
         "provider":"[variables('marketplace').providerGuid]"
       },
       "sku":{
@@ -147,6 +148,8 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight inbound SSH firewall rule",
+        "alcesFlightClusterName":"[parameters('clusterName')]",
+        "alcesFlightClusterUuid":"[variables('cluster').uuid]",
         "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
@@ -187,6 +190,8 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight login node network interface",
+        "alcesFlightClusterName":"[parameters('clusterName')]",
+        "alcesFlightClusterUuid":"[variables('cluster').uuid]",
         "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
@@ -220,6 +225,8 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight login node public IP address",
+        "alcesFlightClusterName":"[parameters('clusterName')]",
+        "alcesFlightClusterUuid":"[variables('cluster').uuid]",
         "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
@@ -237,6 +244,8 @@
       "apiVersion":"2016-04-30-preview",
       "tags":{
         "displayName":"Alces Flight login node",
+        "alcesFlightClusterName":"[parameters('clusterName')]",
+        "alcesFlightClusterUuid":"[variables('cluster').uuid]",
         "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
@@ -308,6 +317,8 @@
       },
       "tags":{
         "displayName":"Alces Flight autoscaling compute group",
+        "alcesFlightClusterName":"[parameters('clusterName')]",
+        "alcesFlightClusterUuid":"[variables('cluster').uuid]",
         "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
