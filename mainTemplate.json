@@ -43,7 +43,7 @@
         "description":"Select the desired compute node instance type"
       }
     },
-    "computeNodeInitialCount":{
+    "computeNodeCount":{
       "type":"int",
       "defaultValue":4,
       "minValue":1,
@@ -73,15 +73,21 @@
       "publisher":"alces-flight-limited",
       "product":"alces-flight-compute-solo",
       "version":"latest"
+      "providerGuid": "686076D1-D0B7-4B15-82F7-CA2B19A4F60B"
     },
-    "alcesFlightProviderGuid":"686076D1-D0B7-4B15-82F7-CA2B19A4F60B",
-    "clusterUuid":"[guid(resourceGroup().id, deployment().name)]",
-    "clusterToken":"[uniqueString(resourceGroup().id, deployment().name)]",
-    "loginNodeUserData":"[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', '      hostname: ''master1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
-    "loginNodePrvIp":"10.0.0.4",
-    "computeNodeUserData":"[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('loginNodePrvIp'), '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
-    "computeNodeMinCount":1,
-    "computeNodeMaxCount":32,
+    "cluster": {
+      "uuid": "[guid(parameters('clusterName'))]",
+      "token": "[uniqueString('clusterName')]"
+    },
+    "masterConfig": {
+      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      hostname: ''master1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]"
+      "ipAddress": "10.0.0.4"
+    },
+    "computeConfig": {
+      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('masterConfig').ipAddress, '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]"
+      "minCount": 1,
+      "maxCount": 16
+    },
     "resourceNames":{
       "storageAccount":"[concat(uniqueString(parameters('clusterName'), 'storage'))]",
       "network":"[concat(uniqueString(parameters('clusterName'), 'network'))]",
@@ -102,7 +108,7 @@
       "tags":{
         "displayName":"Alces Flight Storage Account",
         "alcesFlightCluster":"[parameters('clusterName')]",
-        "provider":"[variables('alcesFlightProviderGuid')]"
+        "provider":"[variables('marketplace').providerGuid]"
       },
       "sku":{
         "name":"Standard_LRS",
@@ -116,7 +122,7 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight Cluster Network",
-        "provider":"[variables('alcesFlightProviderGuid')]"
+        "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
       "properties":{
@@ -141,7 +147,7 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight inbound SSH firewall rule",
-        "provider":"[variables('alcesFlightProviderGuid')]"
+        "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
       "properties":{
@@ -181,7 +187,7 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight login node network interface",
-        "provider":"[variables('alcesFlightProviderGuid')]"
+        "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
       "properties":{
@@ -190,7 +196,7 @@
             "name":"master1",
             "properties":{
               "privateIPAllocationMethod":"Static",
-              "privateIPAddress":"[variables('loginNodePrvIp')]",
+              "privateIPAddress":"[variables('masterConfig').ipAddress]",
               "publicIpAddress":{
                 "id":"[resourceId('Microsoft.Network/publicIpAddresses', variables('resourceNames').publicIp)]"
               },
@@ -214,14 +220,14 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight login node public IP address",
-        "provider":"[variables('alcesFlightProviderGuid')]"
+        "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
       "properties":{
         "publicIPAllocationMethod":"Static",
         "idleTimeoutInMinutes":30,
         "dnsSettings":{
-          "domainNameLabel":"[concat(parameters('clusterName'), '-', variables('storageAccountName'))]"
+          "domainNameLabel":"[concat(parameters('clusterName'), '-', variables('resourceNames').storageAccount)]"
         }
       }
     },
@@ -231,7 +237,7 @@
       "apiVersion":"2016-04-30-preview",
       "tags":{
         "displayName":"Alces Flight login node",
-        "provider":"[variables('alcesFlightProviderGuid')]"
+        "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
       "properties":{
@@ -255,7 +261,7 @@
         "osProfile":{
           "computerName":"master1",
           "adminUsername":"[parameters('adminUsername')]",
-          "customData":"[base64(variables('loginNodeUserData'))]",
+          "customData":"[base64(variables('masterConfig').userData)]",
           "linuxConfiguration":{
             "disablePasswordAuthentication":true,
             "ssh":{
@@ -278,7 +284,7 @@
         "diagnosticsProfile":{
           "bootDiagnostics":{
             "enabled":true,
-            "storageUri":"[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob)]"
+            "storageUri":"[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('resourceNames').storageAccount)).primaryEndpoints.blob)]"
           }
         }
       },
@@ -288,12 +294,12 @@
         "product":"[variables('marketplace').product]"
       },
       "dependsOn":[
-        "[resourceId('Microsoft.Network/networkInterfaces', 'master1')]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('resourceNames').networkInt)]"
       ]
     },
     {
       "type":"Microsoft.Compute/virtualMachineScaleSets",
-      "name":"compute-scaleset",
+      "name":"[variables('resourceNames').scaleset]",
       "apiVersion":"2017-03-30",
       "plan":{
         "name":"[variables('marketplace').sku]",
@@ -302,16 +308,16 @@
       },
       "tags":{
         "displayName":"Alces Flight autoscaling compute group",
-        "provider":"[variables('alcesFlightProviderGuid')]"
+        "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
       "sku":{
         "name":"[parameters('computeNodeType')]",
         "tier":"Standard",
-        "capacity":"[parameters('computeNodeInitialCount')]"
+        "capacity":"[parameters('computeNodeCount')]"
       },
       "dependsOn":[
-        "[resourceId('Microsoft.Compute/virtualMachines', 'master1')]"
+        "[resourceId('Microsoft.Compute/virtualMachines', variables('resourceNames').master)]"
       ],
       "properties":{
         "upgradePolicy":{
@@ -320,7 +326,7 @@
         "virtualMachineProfile":{
           "osProfile":{
             "adminUsername":"[parameters('adminUsername')]",
-            "customData":"[base64(variables('computeNodeUserData'))]",
+            "customData":"[base64(variables('computeConfig').userData)]",
             "computerNamePrefix":"node",
             "linuxConfiguration":{
               "disablePasswordAuthentication":true,
@@ -359,7 +365,7 @@
                       "name":"compute-ipconfig",
                       "properties":{
                         "subnet":{
-                          "id":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/flight-network/subnets/default')]"
+                          "id":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', variables('resourceNames').network, '/subnets/default')]"
                         }
                       }
                     }
@@ -369,70 +375,6 @@
             ]
           }
         }
-      }
-    },
-    {
-      "type":"Microsoft.Insights/autoscaleSettings",
-      "apiVersion":"2015-04-01",
-      "name":"autoscaling-compute",
-      "location":"[parameters('location')]",
-      "dependsOn":[
-        "[concat('Microsoft.Compute/virtualMachineScaleSets/', 'compute-scaleset')]"
-      ],
-      "properties":{
-        "name":"autoscaling-compute",
-        "targetResourceUri":"[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/compute-scaleset')]",
-        "enabled":true,
-        "profiles":[
-          {
-            "name":"CPU",
-            "capacity":{
-              "minimum":"[variables('computeNodeMinCount')]",
-              "maximum":"[variables('computeNodeMaxCount')]",
-              "default":"[parameters('computeNodeInitialCount')]"
-            },
-            "rules":[
-              {
-                "metricTrigger":{
-                  "metricName":"Percentage CPU",
-                  "metricNamespace":"",
-                  "metricResourceUri":"[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/compute-scaleset')]",
-                  "timeGrain":"PT1M",
-                  "statistic":"Average",
-                  "timeWindow":"PT5M",
-                  "timeAggregation":"Average",
-                  "operator":"GreaterThan",
-                  "threshold":90
-                },
-                "scaleAction":{
-                  "direction":"Increase",
-                  "type":"ChangeCount",
-                  "value":"1",
-                  "cooldown":"PT1M"
-                }
-              },
-              {
-                "metricTrigger":{
-                  "metricName":"Percentage CPU",
-                  "metricNamespace":"",
-                  "metricResourceUri":"[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/compute-scaleset')]",
-                  "timeGrain":"PT1M",
-                  "statistic":"Average",
-                  "timeWindow":"PT5M",
-                  "timeAggregation":"Average",
-                  "operator":"LessThan",
-                  "threshold":30
-                },
-                "scaleAction":{
-                  "direction":"Decrease",
-                  "type":"ChangeCount",
-                  "value":"1",
-                  "cooldown":"PT30M"
-                }
-              }
-            ]
-          }
-        ]
       }
     }
   ],
