@@ -72,7 +72,7 @@
       "sku":"oss-edition",
       "publisher":"alces-flight-limited",
       "product":"alces-flight-compute-solo",
-      "version":"latest"
+      "version":"latest",
       "providerGuid": "686076D1-D0B7-4B15-82F7-CA2B19A4F60B"
     },
     "cluster": {
@@ -80,11 +80,11 @@
       "token": "[uniqueString('clusterName')]"
     },
     "masterConfig": {
-      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      hostname: ''master1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]"
+      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      hostname: ''master1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
       "ipAddress": "10.0.0.4"
     },
     "computeConfig": {
-      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('masterConfig').ipAddress, '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]"
+      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('masterConfig').ipAddress, '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
       "minCount": 1,
       "maxCount": 16
     },
