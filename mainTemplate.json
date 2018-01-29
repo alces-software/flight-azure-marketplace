@@ -80,14 +80,23 @@
 				"loginNodeUserData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', '      hostname: ''master1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
 				"loginNodePrvIp": "10.0.0.4",
 				"computeNodeUserData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('loginNodePrvIp'), '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
-				"storageAccountName": "[concat(uniqueString(parameters('clusterName'), 'storage'))]",
 				"computeNodeMinCount": 1,
-				"computeNodeMaxCount": 32
+				"computeNodeMaxCount": 32,
+                "resourceNames": {
+                    "storageAccount": "[concat(uniqueString(parameters('clusterName'), 'storage'))]",
+                    "network": "[concat(uniqueString(parameters('clusterName'), 'network'))]",
+                    "securityGroup": "[concat(uniqueString(parameters('clusterName'), 'sg'))]",
+                    "networkInt": "[concat(uniqueString(parameters('clusterName'), 'int'))]",
+                    "publicIp": "[concat(uniqueString(parameters('clusterName'), 'publicIp'))]",
+                    "master": "[concat(uniqueString(parameters('clusterName'), 'master'))]",
+                    "scaleset": "[concat(uniqueString(parameters('clusterName'), 'scaleset'))]",
+                    "scaleconfig": "[concat(uniqueString(parameters('clusterName'), 'scaleconfig'))]"
+                }
 			},
 			"resources": [
 				{
 					"type": "Microsoft.Storage/storageAccounts",
-					"name": "[variables('storageAccountName')]",
+					"name": "[variables('resourceNames').storageAccount]",
 					"location": "[parameters('location')]",
 					"apiVersion": "2016-01-01",
 					"tags": {
@@ -103,7 +112,7 @@
 				},
 				{
 					"type": "Microsoft.Network/virtualNetworks",
-					"name": "flight-network",
+					"name": "[variables('resourceNames').network]",
 					"apiVersion": "2017-03-01",
 					"tags": {
 						"displayName": "Alces Flight Cluster Network",
@@ -128,7 +137,7 @@
 				},
 				{
 					"type": "Microsoft.Network/networkSecurityGroups",
-					"name": "inbound-ssh",
+					"name": "[variables('resourceNames').securityGroup]",
 					"apiVersion": "2017-03-01",
 					"tags": {
 						"displayName": "Alces Flight inbound SSH firewall rule",
@@ -168,7 +177,7 @@
 				},
 				{
 					"type": "Microsoft.Network/networkInterfaces",
-					"name": "master1",
+					"name": "[variables('resourceNames').networkInt]",
 					"apiVersion": "2017-03-01",
 					"tags": {
 						"displayName": "Alces Flight login node network interface",
@@ -183,25 +192,25 @@
 									"privateIPAllocationMethod": "Static",
 									"privateIPAddress": "[variables('loginNodePrvIp')]",
 									"publicIpAddress": {
-										"id": "[resourceId('Microsoft.Network/publicIpAddresses', 'master1')]"
+										"id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('resourceNames').publicIp)]"
 									},
 									"subnet": {
-										"id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'flight-network'), '/subnets/default')]"
+										"id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('resourceNames').network), '/subnets/default')]"
 									}
 								}
 							}
 						],
 						"networkSecurityGroup": {
-							"id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'inbound-ssh')]"
+							"id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('resourceNames').securityGroup)]"
 						}
 					},
 					"dependsOn": [
-						"[resourceId('Microsoft.Network/networkSecurityGroups', 'inbound-ssh')]"
+						"[resourceId('Microsoft.Network/networkSecurityGroups', variables('resourceNames').securityGroup)]"
 					]
 				},
 				{
 					"type": "Microsoft.Network/publicIPAddresses",
-					"name": "master1",
+					"name": "[variables('resourceNames').publicIp]",
 					"apiVersion": "2017-03-01",
 					"tags": {
 						"displayName": "Alces Flight login node public IP address",
@@ -218,7 +227,7 @@
 				},
 				{
 					"type": "Microsoft.Compute/virtualMachines",
-					"name": "master1",
+					"name": "[variables('resourceNames').master]",
 					"apiVersion": "2016-04-30-preview",
 					"tags": {
 						"displayName": "Alces Flight login node",
@@ -262,7 +271,7 @@
 						"networkProfile": {
 							"networkInterfaces": [
 								{
-									"id": "[resourceId('Microsoft.Network/networkInterfaces', 'master1')]"
+									"id": "[resourceId('Microsoft.Network/networkInterfaces', variables('resourceNames').networkInt)]"
 								}
 							]
 						},
