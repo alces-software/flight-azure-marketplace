@@ -80,11 +80,11 @@
       "token": "[uniqueString('clusterName')]"
     },
     "masterConfig": {
-      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      hostname: ''master1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
+      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      host_naming: ''allocate''', '\n', '      uuid: ''', variables('cluster').uuid, '''', '\n', '      token: ''', variables('cluster').token, '''', '\n', '      hostname: ''master1''', '\n', '      role: ''master''', '\n', '      tags:', '\n', '        scheduler_roles: '':master:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
       "ipAddress": "10.0.0.4"
     },
     "computeConfig": {
-      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('masterConfig').ipAddress, '\n', 'uuid: ''', variables('cluster').uuid, '''', '\n', 'token: ''', variables('cluster').token, '''', '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
+      "userData": "[concat('#cloud-config', '\n', 'system_info:', '\n', '  default_user:', '\n', '    name: ', parameters('adminUsername'), '\n', '    ssh_authorized_keys:', '\n', '      - ', parameters('adminPublicKey'), '\n', 'write_files:', '\n', '- content: |', '\n', '    cluster:', '\n', '      name: ''', parameters('clusterName'), '''', '\n', '      master: ', variables('masterConfig').ipAddress, '\n', '      uuid: ''', variables('cluster').uuid, '''', '\n', '      token: ''', variables('cluster').token, '''', '\n', '      role: ''slave''', '\n', '      tags:', '\n', '        scheduler_roles: '':compute:''', '\n', '  owner: root:root', '\n', '  path: /opt/clusterware/etc/config.yml', '\n', '  permissions: ''0640''', '\n')]",
       "minCount": 1,
       "maxCount": 16
     },
@@ -94,7 +94,7 @@
       "securityGroup":"[concat(uniqueString(parameters('clusterName'), 'sg'))]",
       "networkInt":"[concat(uniqueString(parameters('clusterName'), 'int'))]",
       "publicIp":"[concat(uniqueString(parameters('clusterName'), 'publicIp'))]",
-      "master":"[concat(uniqueString(parameters('clusterName'), 'master'))]",
+      "master":"[concat(parameters('clusterName'), '-', 'master')]",
       "scaleset":"[concat(uniqueString(parameters('clusterName'), 'scaleset'))]",
       "scaleconfig":"[concat(uniqueString(parameters('clusterName'), 'scaleconfig'))]"
     }
@@ -123,6 +123,8 @@
       "apiVersion":"2017-03-01",
       "tags":{
         "displayName":"Alces Flight Cluster Network",
+        "alcesFlightClusterName":"[parameters('clusterName')]",
+        "alcesFlightClusterUuid":"[variables('cluster').uuid]",
         "provider":"[variables('marketplace').providerGuid]"
       },
       "location":"[parameters('location')]",
@@ -198,7 +200,7 @@
       "properties":{
         "ipConfigurations":[
           {
-            "name":"master1",
+            "name":"[variables('resourceNames').networkInt]",
             "properties":{
               "privateIPAllocationMethod":"Static",
               "privateIPAddress":"[variables('masterConfig').ipAddress]",
@@ -391,7 +393,7 @@
   ],
   "outputs":{
     "fqdn":{
-      "value":"[reference(resourceId('Microsoft.Network/publicIPAddresses', 'master1'), '2017-03-01').dnsSettings.fqdn]",
+      "value":"[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('resourceNames').publicIp), '2017-03-01').dnsSettings.fqdn]",
       "type":"string"
     }
   }
