@@ -72,16 +72,12 @@
               "Standard_D16s_v3",
               "Standard_D32s_v3"
             ],
-            "constraints":{
-              "allowedSizes":[
-                "Standard_D2s_v3",
-                "Standard_D4s_v3",
-                "Standard_D8s_v3",
-                "Standard_D16s_v3",
-                "Standard_D32s_v3"
-              ]
-            },
             "osPlatform":"Linux",
+            "imageReference": {
+              "publisher": "alces-flight-limited",
+              "offer": "alces-flight-compute-solo",
+              "sku": "oss-edition"
+            },
             "visible":true
           },
           {
@@ -94,16 +90,12 @@
               "Standard_D16s_v3",
               "Standard_D32s_v3"
             ],
-            "constraints":{
-              "allowedSizes":[
-                "Standard_D2s_v3",
-                "Standard_D4s_v3",
-                "Standard_D8s_v3",
-                "Standard_D16s_v3",
-                "Standard_D32s_v3"
-              ]
-            },
             "osPlatform":"Linux",
+            "imageReference": {
+              "publisher": "alces-flight-limited",
+              "offer": "alces-flight-compute-solo",
+              "sku": "oss-edition"
+            },
             "visible":true
           },
           {
@@ -113,7 +105,7 @@
             "defaultValue":4,
             "constraints":{
               "required":true,
-              "regex":"^([1-9]|1[016])$",
+              "regex":"/^[1-9]$|^[1-2]\d$|^1[0-6]$/",
               "validationMessage":"Please enter a number between 1 and 16"
             },
             "visible":true
