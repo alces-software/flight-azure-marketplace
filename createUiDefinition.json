@@ -105,7 +105,6 @@
             "defaultValue":4,
             "constraints":{
               "required":true,
-              "regex":"^[1-9]$|^[1-2]\d$|^1[0-6]$",
               "validationMessage":"Please enter a number between 1 and 16"
             },
             "visible":true
