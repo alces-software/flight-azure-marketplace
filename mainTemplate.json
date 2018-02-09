@@ -5,6 +5,9 @@
     "location":{
       "type":"string"
     },
+    "dnsLabel": {
+      "type":"string"
+    },
     "clusterName":{
       "type":"string",
       "defaultValue":"flight",
@@ -32,13 +35,6 @@
     "computeNodeType":{
       "type":"string",
       "defaultValue":"Standard_D4s_v3",
-      "allowedValues":[
-        "Standard_D2s_v3",
-        "Standard_D4s_v3",
-        "Standard_D8s_v3",
-        "Standard_D16s_v3",
-        "Standard_D32s_v3"
-      ],
       "metadata":{
         "description":"Select the desired compute node instance type"
       }
@@ -55,13 +51,6 @@
     "loginNodeType":{
       "type":"string",
       "defaultValue":"Standard_D2s_v3",
-      "allowedValues":[
-        "Standard_D2s_v3",
-        "Standard_D4s_v3",
-        "Standard_D8s_v3",
-        "Standard_D16s_v3",
-        "Standard_D32s_v3"
-      ],
       "metadata":{
         "description":"Select the desired login node instance type"
       }
@@ -208,7 +197,7 @@
                 "id":"[resourceId('Microsoft.Network/publicIpAddresses', variables('resourceNames').publicIp)]"
               },
               "subnet":{
-                "id":"[concat(resourceId('Microsoft.Network/virtualNetworks', variables('resourceNames').network), '/subnets/default')]"
+                "id":"[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('resourceNames').network, 'default')]"
               }
             }
           }
@@ -236,14 +225,14 @@
         "publicIPAllocationMethod":"Static",
         "idleTimeoutInMinutes":30,
         "dnsSettings":{
-          "domainNameLabel":"[concat(parameters('clusterName'), '-', variables('resourceNames').storageAccount)]"
+          "domainNameLabel":"[parameters('dnsLabel')]"
         }
       }
     },
     {
       "type":"Microsoft.Compute/virtualMachines",
       "name":"[variables('resourceNames').master]",
-      "apiVersion":"2016-04-30-preview",
+      "apiVersion":"2017-12-01",
       "tags":{
         "displayName":"Alces Flight login node",
         "alcesFlightClusterName":"[parameters('clusterName')]",
@@ -295,7 +284,7 @@
         "diagnosticsProfile":{
           "bootDiagnostics":{
             "enabled":true,
-            "storageUri":"[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('resourceNames').storageAccount)).primaryEndpoints.blob)]"
+            "storageUri":"[reference(variables('resourceNames').storageAccount).primaryEndpoints.blob]"
           }
         }
       },
@@ -378,7 +367,7 @@
                       "name":"compute-ipconfig",
                       "properties":{
                         "subnet":{
-                          "id":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', variables('resourceNames').network, '/subnets/default')]"
+                          "id":"[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('resourceNames').network, 'default')]"
                         }
                       }
                     }
