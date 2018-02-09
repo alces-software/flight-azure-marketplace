@@ -59,10 +59,10 @@
             }
           },
           {
-            "name":"loginNodeDnsLabel",
+            "name":"dnsLabel",
             "type":"Microsoft.Network.PublicIpAddressCombo",
             "label":{
-              "publicIpAddress":"Public IP address",
+              "publicIpAddress":"Login node public IP address",
               "domainNameLabel":"Domain name label"
             },
             "options": {
@@ -140,7 +140,7 @@
       "adminUsername":"[steps('Credentials').adminUsername]",
       "adminPublicKey":"[steps('Credentials').adminPublicKey]",
       "location":"[location()]",
-      "dnsLabel":"[steps('clusterConfiguration').loginNodeDnsLabel]",
+      "dnsLabel":"[steps('clusterConfiguration').dnsLabel]",
       "computeNodeCount":"[steps('clusterConfiguration').computeNodeCount]",
       "computeNodeType":"[steps('clusterConfiguration').computeNodeType]",
       "loginNodeType":"[steps('clusterConfiguration').loginNodeType]",
