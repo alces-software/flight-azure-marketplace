@@ -197,7 +197,7 @@
                 "id":"[resourceId('Microsoft.Network/publicIpAddresses', variables('resourceNames').publicIp)]"
               },
               "subnet":{
-                "id":"[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('resourceNames').network), 'default')]"
+                "id":"[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('resourceNames').network, 'default')]"
               }
             }
           }
@@ -367,7 +367,7 @@
                       "name":"compute-ipconfig",
                       "properties":{
                         "subnet":{
-                          "id":"resourceId('Microsoft.Network/virtualNetworks/subnets', variables('resourceNames').network), 'default')"
+                          "id":"resourceId('Microsoft.Network/virtualNetworks/subnets', variables('resourceNames').network, 'default')"
                         }
                       }
                     }
