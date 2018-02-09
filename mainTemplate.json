@@ -5,7 +5,7 @@
     "location":{
       "type":"string"
     },
-    "loginNodeDnsLabel": {
+    "dnsLabel": {
       "type":"string"
     },
     "clusterName":{
@@ -225,7 +225,7 @@
         "publicIPAllocationMethod":"Static",
         "idleTimeoutInMinutes":30,
         "dnsSettings":{
-          "domainNameLabel":"[parameters('loginNodeDnsLabel')]"
+          "domainNameLabel":"[parameters('dnsLabel')]"
         }
       }
     },
