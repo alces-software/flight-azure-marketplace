@@ -61,7 +61,7 @@
           {
             "name":"loginNodeDnsLabel",
             "type":"Microsoft.Network.PublicIpAddressCombo",
-            "label":" {
+            "label":{
               "publicIpAddress":"Public IP address",
               "domainNameLabel":"Domain name label"
             },

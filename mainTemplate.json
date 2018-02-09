@@ -367,7 +367,7 @@
                       "name":"compute-ipconfig",
                       "properties":{
                         "subnet":{
-                          "id":"[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', variables('resourceNames').network, '/subnets/default')]"
+                          "id":"resourceId('Microsoft.Network/virtualNetworks/subnets', variables('resourceNames').network), 'default')"
                         }
                       }
                     }
